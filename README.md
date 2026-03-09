@@ -1,6 +1,8 @@
 # Pamfilico Python Pubsub
 
-Redis LIST pub/sub for background task processing. Publisher–Worker pattern with handler decorator, retries, and dead letter queue. Same pattern used in TravelSuite (BoatFast, TourFast, CarFast) and other Pamfilico apps.
+Redis LIST pub/sub for background task processing. Publisher–Worker pattern with handler decorator, retries, and dead letter queue.
+
+**Used by:** [carfa.st](https://carfa.st) · [boatfa.st](https://boatfa.st) · [docufa.st](https://docufa.st) · [rentfa.st](https://rentfa.st) · [guestfa.st](https://guestfa.st) · [tourfa.st](https://tourfa.st) · [pamfili.co](https://pamfili.co)
 
 ## Installation
 
