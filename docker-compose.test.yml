@@ -1,0 +1,36 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    ports:
+      - "5001:5000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - QUEUE_NAME=test_queue
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: pubsub-worker --handlers pamfilico_python_pubsub.demo_handlers
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - QUEUE_NAME=test_queue
+      - PUBSUB_TEST_RESULT_KEY=test:echo:result
+    depends_on:
+      redis:
+        condition: service_healthy

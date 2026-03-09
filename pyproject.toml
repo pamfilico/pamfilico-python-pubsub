@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "pamfilico-python-pubsub"
+version = "0.1.0"
+description = "Redis LIST pub/sub for background task processing with handler decorator and worker"
+authors = ["Pamfilico"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+redis = ">=4.0.0"
+
+[tool.poetry.scripts]
+pubsub-worker = "pamfilico_python_pubsub.worker:main"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.0.0"
+flask = ">=2.0.0"
+requests = ">=2.28.0"
+commitizen = "^4.9.1"
+
+[tool.pytest.ini_options]
+testpaths = ["pamfilico_python_pubsub/tests"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+version_files = [
+    "pyproject.toml:version"
+]
+update_changelog_on_bump = true
+tag_format = "v$version"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

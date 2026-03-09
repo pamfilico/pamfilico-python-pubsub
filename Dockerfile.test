@@ -1,0 +1,12 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir poetry
+COPY pyproject.toml poetry.lock* README.md ./
+COPY pamfilico_python_pubsub pamfilico_python_pubsub
+COPY pamfilico_python_pubsub/tests pamfilico_python_pubsub/tests
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi
+
+CMD ["python", "-c", "from pamfilico_python_pubsub.tests.test_server import app; app.run(host='0.0.0.0', port=5000)"]
