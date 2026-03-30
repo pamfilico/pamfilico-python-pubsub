@@ -2,22 +2,31 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6380:6379"
+      - "6381:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
 
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1027:1025"
+      - "8027:8025"
+
   api:
     build:
       context: .
       dockerfile: Dockerfile.test
     ports:
-      - "5001:5000"
+      - "5099:5000"
     environment:
       - REDIS_URL=redis://redis:6379
       - QUEUE_NAME=test_queue
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
+      - EMAIL_FROM=test@example.com
     depends_on:
       redis:
         condition: service_healthy
@@ -26,11 +35,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.test
-    command: pubsub-worker --handlers pamfilico_python_pubsub.demo_handlers
+    command: pubsub-worker --handlers pamfilico_python_pubsub.demo_handlers,pamfilico_python_pubsub.email_handlers,pamfilico_python_pubsub.hello_handler
     environment:
       - REDIS_URL=redis://redis:6379
       - QUEUE_NAME=test_queue
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
+      - EMAIL_FROM=test@example.com
       - PUBSUB_TEST_RESULT_KEY=test:echo:result
     depends_on:
       redis:
         condition: service_healthy
+      mailpit:
+        condition: service_started

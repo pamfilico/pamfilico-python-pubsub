@@ -1,0 +1,8 @@
+{
+  "project_name": "My App",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "queue_name": "{{ cookiecutter.project_slug }}_queue",
+  "email_from": "noreply@example.com",
+  "smtp_host": "localhost",
+  "smtp_port": "1025"
+}

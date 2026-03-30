@@ -20,9 +20,16 @@ logger = logging.getLogger("worker")
 
 
 def run_worker(handlers_module: str | None = None) -> None:
-    """Run the worker loop. Optionally import handlers from the given module first."""
+    """Run the worker loop. Optionally import handlers from the given module(s) first.
+
+    handlers_module can be a single module path or comma-separated list:
+        "myapp.handlers" or "myapp.handlers,myapp.email_handlers"
+    """
     if handlers_module:
-        importlib.import_module(handlers_module)
+        for mod in handlers_module.split(","):
+            mod = mod.strip()
+            if mod:
+                importlib.import_module(mod)
     logger.info(f"Worker started. Queue={QUEUE_NAME}, DLQ={DLQ_NAME}, MaxRetries={MAX_RETRIES}")
     while True:
         result = redis_client.blpop(QUEUE_NAME, timeout=1)
